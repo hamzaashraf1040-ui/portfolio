@@ -14,33 +14,35 @@ export const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>('home');
 
   useEffect(() => {
-    const sections = ['home', 'about', 'certifications', 'experience', 'skills', 'projects', 'contact'];
+    const sectionIds = ['home', 'about', 'certifications', 'experience', 'skills', 'projects', 'contact'];
 
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + 200;
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const sectionId = sections[i];
-        const element = document.getElementById(sectionId);
-        if (element) {
-          const top = element.offsetTop;
-          if (scrollPosition >= top) {
-            setActiveSection(sectionId);
-            break;
-          }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // find the entry with the largest intersection ratio that is intersecting
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible.length > 0) {
+          setActiveSection(visible[0].target.id);
         }
+      },
+      {
+        threshold: [0.15, 0.4, 0.6],
+        rootMargin: '-80px 0px -20% 0px',
       }
-    };
+    );
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => observer.disconnect();
   }, []);
 
   // IntersectionObserver for soft fade / slide-up reveal
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    const revealObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
@@ -52,9 +54,9 @@ export const App: React.FC = () => {
     );
 
     const revealElements = document.querySelectorAll('.reveal-fade-up');
-    revealElements.forEach((el) => observer.observe(el));
+    revealElements.forEach((el) => revealObserver.observe(el));
 
-    return () => observer.disconnect();
+    return () => revealObserver.disconnect();
   }, []);
 
   return (
@@ -65,9 +67,7 @@ export const App: React.FC = () => {
       {/* Main Content Sections */}
       <main>
         <Hero />
-        <div className="reveal-fade-up">
-          <About />
-        </div>
+        <About />
         <div className="reveal-fade-up">
           <Certifications />
         </div>

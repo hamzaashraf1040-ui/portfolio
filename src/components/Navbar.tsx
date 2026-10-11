@@ -41,8 +41,8 @@ export const Navbar: React.FC<NavbarProps> = ({ activeSection }) => {
       {/* Floating Centered Pill Navbar */}
       <header className="fixed top-5 left-0 right-0 z-50 flex justify-center px-4 sm:px-6 pointer-events-none transition-all duration-300">
         <nav
-          className={`pointer-events-auto w-full max-w-5xl rounded-full bg-[#0a0d14]/95 backdrop-blur-md border border-white/10 px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between shadow-2xl transition-all duration-300 ${
-            isScrolled ? 'shadow-black/40 border-white/15 py-2.5' : ''
+          className={`pointer-events-auto w-full max-w-5xl rounded-full bg-[#0a0d14]/95 backdrop-blur-md border border-white/10 px-5 sm:px-7 py-2.5 sm:py-3 flex items-center justify-between shadow-2xl transition-all duration-300 ${
+            isScrolled ? 'shadow-black/40 border-white/15' : ''
           }`}
           aria-label="Main Navigation"
         >
@@ -52,7 +52,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeSection }) => {
             className="flex items-center gap-1 group text-left focus:outline-none"
             aria-label="Back to top"
           >
-            <span className="font-serif font-bold text-lg sm:text-xl text-white tracking-tight group-hover:opacity-90 transition-opacity">
+            <span className="font-sans font-bold text-lg sm:text-xl text-white tracking-tight group-hover:opacity-90 transition-opacity">
               {portfolioData.personal.name.split(' ')[0]}
             </span>
             <span className="font-mono text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
@@ -60,17 +60,18 @@ export const Navbar: React.FC<NavbarProps> = ({ activeSection }) => {
             </span>
           </button>
 
-          {/* Desktop Links */}
-          <div className="hidden md:flex items-center gap-1.5 lg:gap-2">
+          {/* Right: nav links + mobile toggle */}
+          <div className="flex items-center gap-1 lg:gap-1.5">
+            {/* Desktop Links */}
             {navLinks.map((link) => {
               const isActive = activeSection === link.id;
               return (
                 <button
                   key={link.id}
                   onClick={() => scrollTo(link.id)}
-                  className={`text-xs font-medium px-3.5 py-1.5 rounded-full transition-all duration-200 focus:outline-none ${
+                  className={`hidden md:inline-flex text-[11px] lg:text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-250 focus:outline-none ${
                     isActive
-                      ? 'bg-white text-black font-semibold shadow-sm'
+                      ? 'bg-white text-black font-semibold shadow-sm scale-105'
                       : 'text-gray-300 hover:text-white hover:bg-white/10'
                   }`}
                 >
@@ -78,17 +79,6 @@ export const Navbar: React.FC<NavbarProps> = ({ activeSection }) => {
                 </button>
               );
             })}
-          </div>
-
-          {/* Right Action / Mobile Toggle */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => scrollTo('contact')}
-              className="hidden lg:inline-flex items-center gap-1 text-xs font-medium text-black bg-white hover:bg-gray-100 px-3.5 py-1.5 rounded-full transition-all"
-            >
-              <span>Get in touch</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </button>
 
             {/* Mobile Menu Button */}
             <button
